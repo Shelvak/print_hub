@@ -32,7 +32,7 @@ group :assets do
 end
 
 group :development do
-  gem 'ruby-debug19', require: 'ruby-debug'
+#  gem 'ruby-debug19', require: 'ruby-debug'
   gem 'thin'
 end
 
@@ -41,5 +41,6 @@ group :test do
   gem 'minitest', require: false
   gem 'ruby-prof', require: false
   gem 'capybara', require: false
+  gem 'selenium-webdriver', '2.16.0'
   gem 'database_cleaner' # For Capybara
 end
