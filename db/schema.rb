@@ -27,13 +27,13 @@ ActiveRecord::Schema.define(:version => 20120227025951) do
   add_index "article_lines", ["print_id"], :name => "index_article_lines_on_print_id"
 
   create_table "articles", :force => true do |t|
+    t.integer  "code",                                                       :null => false
     t.string   "name",                                                       :null => false
     t.decimal  "price",        :precision => 15, :scale => 3,                :null => false
     t.text     "description"
     t.integer  "lock_version",                                :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "code",                                                       :null => false
   end
 
   add_index "articles", ["code"], :name => "index_articles_on_code", :unique => true
