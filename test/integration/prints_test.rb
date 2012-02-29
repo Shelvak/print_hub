@@ -8,9 +8,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
     page.driver.options[:resynchronize] = true
+    
+    @ac_field = 'auto_document_print_job_print_print_jobs_attributes_0_'
   end
-  
-  ac_field = 'auto_document_print_job_print_print_jobs_attributes_0_'
   
   test 'should add a document with +' do
     adm_login
@@ -41,10 +41,10 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert page.has_css?('.print_job', count: 1)
     
-    barcode = find("##{ac_field}").value
+    barcode = find("##@ac_field").value
     
     assert_equal Document.order('code DESC').first.code.to_i, 
-                        barcode.match(/(\d+)/)[1].to_i
+      barcode.match(/\[(\d+)/)[1].to_i
    
   end
   
@@ -62,15 +62,15 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
     
     within 'form.new_print' do
-        select(
-        Cups.show_destinations.detect { |p| p =~ /pdf/i },
-                     from: 'print_printer' )
+      select(
+        Cups.show_destinations.detect { |p| p =~ /pdf/i }, from: 'print_printer' 
+      )
     end
     
     within '.print_job' do |ac|
-      fill_in "#{ac_field}", with: 'Math'
+      fill_in "#@ac_field", with: 'Math'
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find("##{ac_field}").native.send_keys :arrow_down, :tab
+      find("##@ac_field").native.send_keys :arrow_down, :tab
     end
     
     assert_difference 'Print.count' do
@@ -78,7 +78,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('#notice', text: I18n.t('view.prints.correctly_created') )
+    assert page.has_css?('#notice', text: I18n.t('view.prints.correctly_created'))
     
   end
   
@@ -102,7 +102,8 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
       within :xpath, "//table[@class='ui-datepicker-calendar']" do
         assert page.has_xpath?(
-                  "//div[@id='ui-timepicker-div-print_scheduled_at']")
+          "//div[@id='ui-timepicker-div-print_scheduled_at']"
+        )
         within :xpath, "//div[@class='ui-timepicker-div']" do
           find('.ui_tpicker_hour .ui-slider-handle').native.send_keys :end
           find('.ui_tpicker_minute .ui-slider-handle').native.send_keys :end
@@ -111,9 +112,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     within '.print_job' do |ac|
-      fill_in "#{ac_field}", with: 'Math'
+      fill_in "#@ac_field", with: 'Math'
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find("##{ac_field}").native.send_keys :arrow_down, :tab
+      find("##@ac_field").native.send_keys :arrow_down, :tab
     end
     
     assert_difference 'Print.count' do
@@ -121,9 +122,6 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('#notice', 
-                text: I18n.t('view.prints.correctly_created') )
-    
+    assert page.has_css?('#notice', text: I18n.t('view.prints.correctly_created'))
   end
-  
 end
