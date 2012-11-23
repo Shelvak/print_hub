@@ -2,6 +2,7 @@ require 'bundler/capistrano'
 require 'whenever/capistrano'
 
 set :whenever_command, 'bundle exec whenever'
+set :whenever_roles, [:db]
 
 set :application, 'print_hub'
 set :repository,  'https://github.com/Shelvak/print_hub.git'
