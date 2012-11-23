@@ -4,19 +4,19 @@ set :whenever_command, 'bundle exec whenever'
 require 'whenever/capistrano'
 
 set :application, 'print_hub'
-set :repository,  'https://github.com/cetem/print_hub.git'
+set :repository,  'https://github.com/Shelvak/print_hub.git'
 set :deploy_to, '/var/rails/print_hub'
-set :user, 'deployer'
+set :user, 'ubuntu'
 set :group_writable, false
 set :shared_children, %w(log)
 set :use_sudo, false
 
 set :scm, :git
-set :branch, 'master'
+set :branch, 'victor-riva'
 
-role :web, 'fotocopia.frm.utn.edu.ar'
-role :app, 'fotocopia.frm.utn.edu.ar'
-role :db, 'fotocopia.frm.utn.edu.ar', primary: true
+role :web, 'victor-riva.no-ip.org'
+role :app, 'victor-riva.no-ip.org'
+role :db, 'victor-riva.no-ip.org', primary: true
 
 before 'deploy:finalize_update', 'deploy:create_shared_symlinks'
 
