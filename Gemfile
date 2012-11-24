@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.8'
 
 gem 'pg'
-gem 'authlogic'
+gem 'authlogic', git: 'git@github.com:james2m/authlogic.git', branch: 'fix-migrations'
 gem 'rails-settings', git: 'https://github.com/100hz/rails-settings.git'
 gem 'jquery-rails'
 gem 'validates_timeliness'
