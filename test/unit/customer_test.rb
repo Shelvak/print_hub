@@ -7,6 +7,8 @@ class CustomerTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @customer = Customer.find customers(:student).id
+
+    prepare_document_files
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -25,7 +27,7 @@ class CustomerTest < ActiveSupport::TestCase
   test 'create without bonus' do
     # Send welcome email
     assert_difference 'ActionMailer::Base.deliveries.size' do
-      assert_difference ['Customer.count'] do
+      assert_difference 'Customer.count' do
         assert_no_difference 'Bonus.count' do
           @customer = Customer.create(
             {
@@ -385,7 +387,8 @@ class CustomerTest < ActiveSupport::TestCase
     date = Date.new(month.last, month.first, 1)
     
     assert_difference '@customer.months_to_pay.size', -1 do
-      assert @customer.pay_month_debt(date)
+      assert @customer.pay_month_debt(date), 
+        @customer.errors.full_messages.join(', ')
     end
 
     current_date = [[Date.today.month, Date.today.year]]

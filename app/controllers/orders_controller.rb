@@ -1,9 +1,12 @@
 class OrdersController < ApplicationController
   helper_method :order_type
-  before_filter :require_customer_or_user, :load_scope,
-    only: [:index, :show, :destroy]
-  before_filter :require_customer, except: [:index, :show, :destroy]
+  [:index, :show, :destroy, :download_file].tap do |actions|
+    before_filter :require_customer_or_user, :load_scope, only: actions
+    before_filter :require_customer, except: actions
+  end
   
+  ->(c) { c.request.xhr? ? false : 'application' }
+
   # GET /orders
   # GET /orders.json
   def index
@@ -113,7 +116,30 @@ class OrdersController < ApplicationController
       end
     end
   end
-  
+
+  # POST /orders/upload_file
+  def upload_file
+    @order = Order.new
+    order_file = @order.order_files.build(params[:order_file])
+    order_file.extract_page_count if order_file
+
+    respond_to do |format|
+      if order_file
+        format.html { render partial: 'orders/order_file' }
+        format.js
+      else
+        format.html { head :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /orders/clear_catalog_order
+  def clear_catalog_order
+    if session[:documents_to_order].try(:clear)
+      redirect_to orders_path, notice: t('view.orders.catalog_order_cleared')
+    end
+  end
+
   private
   
   def load_scope

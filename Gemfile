@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.9'
+gem 'rails', '3.2.12'
 
 gem 'pg'
 gem 'authlogic', git: 'git@github.com:james2m/authlogic.git', branch: 'fix-migrations'
@@ -10,7 +10,6 @@ gem 'validates_timeliness'
 gem 'awesome_nested_set'
 gem 'rghost'
 gem 'will_paginate'
-gem 'paperclip'
 gem 'foreigner'
 gem 'memcache-client'
 gem 'paper_trail'
@@ -24,12 +23,13 @@ gem 'whenever', require: false
 gem 'cups'
 gem 'pdf-reader'
 gem 'simple_form'
+gem 'carrierwave'
+gem 'rmagick'
+gem 'jquery-fileupload-rails'
 
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
-  gem 'libv8'
-  gem 'therubyracer', require: false
   gem 'uglifier'
 end
 

@@ -8,6 +8,10 @@
   activerecord:
     errors:
       models:
+        document:
+          attributes:
+            file:
+              without_extension: 'debe tener extensión'
         order:
           attributes:
             base:
@@ -219,6 +223,9 @@
     hide_details: 'Ocultar detalles'
     show_details: 'Ver detalles'
     apologies_for_the_inconvenience: 'Disculpe las molestias'
+    recreate_versions_error: 'Ha sucedido un error al procesar las miniaturas %{e}'
+    messages:
+      extension_white_list_error: 'Solo se permiten archivos PDF'
     
   label:
     'yes': 'Si'
@@ -267,6 +274,9 @@
     must_be_admin: 'Debe tener privilegios de administrador para poder ver el contenido requerido'
     must_be_logged_in: 'Debe ingresar para poder ver el contenido requerido'
     must_be_logged_out: 'Debe salir para poder ver el contenido requerido'
+    file_upload_warning: 'Si abandona esta pagina los archivos subidos se perderán'
+    only_pdf_permitted: "Solo se permiten subir pdf's"
+    customer_file_was_deleted: 'El archivo de cliente ya ha sido eliminado'
     
   notifications:
     forgot_password:
@@ -424,6 +434,7 @@
       cancel: 'Cancelar'
       notes_link: '¿Necesitás aclarar algo sobre el pedido?'
       print: 'Imprimir comprobante'
+      upload_file: 'Subir archivo'
       status:
         pending: 'Pendiente'
         completed: 'Impreso'
@@ -433,6 +444,8 @@
           html: 'Pedidos para <strong>imprimir</strong>'
         all:
           html: 'Pedidos'
+      catalog_order_cleared: 'Listo, la orden ya no contiene archivos'
+      clear_catalog_order: 'Vaciar pedido'
     password_resets:
       new_title: 'Restaurar contraseña'
       edit_title: 'Modificar contraseña'
