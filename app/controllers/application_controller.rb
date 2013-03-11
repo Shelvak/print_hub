@@ -77,7 +77,7 @@ class ApplicationController < ActionController::Base
 
   def require_user
     if current_user
-      run_shift_tasks
+      true
     else
       flash.notice = t('messages.must_be_logged_in')
 
@@ -102,18 +102,18 @@ class ApplicationController < ActionController::Base
   end
   
   def require_customer_or_user
-    request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
+    request.subdomains.first == APP_CONFIG['public_host'] ?
       require_customer : require_user
   end
   
   def require_no_customer_or_admin
-    request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
+    request.subdomains.first == APP_CONFIG['public_host'] ?
       require_no_customer : require_admin_user
   end
 
   def require_admin_user
     if current_user.try(:admin) == true
-      run_shift_tasks
+      true
     else
       flash.alert = t('messages.must_be_admin')
 
@@ -132,15 +132,6 @@ class ApplicationController < ActionController::Base
     redirect_to(session[:return_to] || default, *args)
 
     session[:return_to] = nil
-  end
-
-  def run_shift_tasks
-    if session[:has_an_open_shift] && controller_name != 'shifts'
-      redirect_to edit_shift_url(current_user.stale_shift), 
-        notice: t('view.shifts.edit_stale')
-    elsif !session[:has_an_open_shift] && !current_user.last_shift_open?
-      current_user_session.create_shift
-    end
   end
 
   def lines_per_page
