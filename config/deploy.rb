@@ -15,9 +15,9 @@ set :use_sudo, false
 set :scm, :git
 set :branch, 'victor-riva'
 
-role :web, 'victor-riva.no-ip.org'
-role :app, 'victor-riva.no-ip.org'
-role :db, 'victor-riva.no-ip.org', primary: true
+role :web, 'mundo-graf.com.ar'
+role :app, 'mundo-graf.com.ar'
+role :db, 'mundo-graf.com.ar', primary: true
 
 before 'deploy:finalize_update', 'deploy:create_shared_symlinks'
 
