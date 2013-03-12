@@ -46,7 +46,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
   
   test 'should get public new' do
-    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+    @request.host = APP_CONFIG['public_host']
     # Look ma, without login =)
     get :new
     assert_response :success
@@ -89,7 +89,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
   
   test 'should create public customer' do
-    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+    @request.host = APP_CONFIG['public_host']
     assert_difference 'Customer.disable.count' do
       post :create, customer: {
         name: 'Jar Jar',
@@ -105,7 +105,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
   
   test 'should create public customer and ignore bonuses' do
-    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+    @request.host = APP_CONFIG['public_host']
     assert_difference 'Customer.disable.count' do
       # Bonuses are silently ignored for customers
       assert_no_difference 'Bonus.count' do
@@ -251,7 +251,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
   
   test 'should activate customer' do
-    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+    @request.host = APP_CONFIG['public_host']
     customer = Customer.disable.find(
       ActiveRecord::Fixtures.identify(:disabled_student)
     )

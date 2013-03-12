@@ -102,13 +102,17 @@ class ApplicationController < ActionController::Base
   end
   
   def require_customer_or_user
-    request.subdomains.first == APP_CONFIG['public_host'] ?
-      require_customer : require_user
+    (
+      request.host == APP_CONFIG['public_host'] ||
+      request.host == "www.#{APP_CONFIG['public_host']}"
+    ) ? require_customer : require_user
   end
   
   def require_no_customer_or_admin
-    request.subdomains.first == APP_CONFIG['public_host'] ?
-      require_no_customer : require_admin_user
+    (
+      request.host == APP_CONFIG['public_host'] ||
+      request.host == "www.#{APP_CONFIG['public_host']}"
+    ) ? require_no_customer : require_admin_user
   end
 
   def require_admin_user

@@ -3,7 +3,7 @@ require 'test_helper'
 class OrdersControllerTest < ActionController::TestCase
   setup do
     @order = orders(:for_tomorrow)
-    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+    @request.host = APP_CONFIG['public_host']
     
     prepare_settings
   end
