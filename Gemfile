@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.0.2'
+gem 'rails', '4.1.1'
 
 gem 'pg'
 gem 'authlogic'
 gem 'validates_timeliness'
-gem 'awesome_nested_set', "~> 3.0.0.rc.3"
+gem 'awesome_nested_set', "~> 3.0.0.rc.5"
 gem 'will_paginate'
 gem 'foreigner'
 gem 'paper_trail'
@@ -26,7 +26,7 @@ gem 'chunky_png'
 gem 'capistrano'
 gem 'capistrano-bundler'
 gem 'capistrano-rails'
-gem 'capistrano-rbenv', github: 'capistrano/rbenv', group: :staging
+gem 'capistrano-rbenv'
 gem 'whenever', require: false
 
 # Cache performance
@@ -48,10 +48,10 @@ gem 'jquery-fileupload-rails'
 
 group :development do
   gem 'thin'
+  gem 'pry-nav'
 end
 
 group :test do
-  gem 'turn'
   gem 'capybara', require: false
   gem 'selenium-webdriver'
   gem 'database_cleaner', require: false # For Capybara
