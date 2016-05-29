@@ -1,6 +1,6 @@
 @Print =
   updateArticleCount: ->
-    articleCount = $('.article_line:not([data-exclude-from-total])').length
+    articleCount = $('.article_line:not(.exclude-from-total)').length
     title = $('a[href="#articles_container"]')
 
     if title.find('.badge').length == 0
@@ -26,10 +26,10 @@
     Print.updateTotalPages()
 
     if !$('#print_pay_later').is(':checked')
-      $('.print_job:not([data-exclude-from-total])').each ->
+      $('.print_job:not(.exclude-from-total)').each ->
         totalPrice += parseFloat($(this).data('price') || 0)
 
-      $('.article_line:not([data-exclude-from-total])').each ->
+      $('.article_line:not(.exclude-from-total)').each ->
         totalPrice += parseFloat($(this).data('price') || 0)
 
 
@@ -120,7 +120,7 @@
     $.each totalTypePages, (key, value) ->
       totalTypePages[key] = 0
 
-    $('.print_job:not([data-exclude-from-total])').each (i, pj)->
+    $('.print_job:not(.exclude-from-total)').each (i, pj)->
       copies = parseInt $(pj).find('input[name$="[copies]"]').val()
       rangePages = parseInt(
         $(pj).find('input[name$="[range]"]').data('rangePages')
@@ -141,12 +141,15 @@
       $(pj).data('oddPages', list)
       totalTypePages[printJobType] += (copies * evenPages) || 0
 
-    $('.print_job:not([data-exclude-from-total])').each (i, pj)->
+    $('.print_job:not(.exclude-from-total)').each (i, pj)->
       oddPages = $(pj).data('oddPages')
 
       for type, pages of oddPages
         totalTypePages = $('[data-jobs-container]').data('pages-list')
         totalTypePages[type] += pages
+
+  excludeElementFromTotal: (element) ->
+    element.classList.add('exclude-from-total')
 
 
 new Rule
@@ -155,14 +158,13 @@ new Rule
     # Elimina con efecto y recalcula
     @map.removeItem ||= (event, element)->
       if $(element).hasClass('print_job')
-        $(element).attr('data-exclude-from-total', '1')
+        Print.excludeElementFromTotal($(element))
 
-        $('.print_job:not([data-exclude-from-total])').each (i, pj) ->
+        $('.print_job:not(.exclude-from-total)').each (i, pj) ->
           Print.updatePrintJobPrice $(pj)
 
       else if $(element).hasClass('article_line')
-        $(element).attr('data-exclude-from-total', '1')
-
+        Print.excludeElementFromTotal($(element))
         Print.updateArticleCount()
         Print.updateTotalPrice()
 
