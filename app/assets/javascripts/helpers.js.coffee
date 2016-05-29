@@ -54,4 +54,6 @@
   replaceIds: (s, regex)->
     s.replace(regex, new Date().getTime() + State.newIdCounter++)
 
-
+  # Reemplaza el texto recibido (value) dependiendo la regEx con newValue
+  replaceWithRegEx: (value, regEx, newValue)->
+    value.replace(regEx, newValue)

@@ -42,6 +42,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'turbolinks'
 gem 'jquery-fileupload-rails'
+gem 'underscore-rails'
 
 # Helpers (at console)
 gem 'interactive_editor'
