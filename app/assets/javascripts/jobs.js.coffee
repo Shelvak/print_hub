@@ -1,5 +1,4 @@
 @Jobs =
-  articles: {},
   jobs: {},
   pagesList: {},
   pricesList: {},
@@ -14,12 +13,14 @@
 
   assignDataToJob: (job)->
     @Jobs.jobs[job.id] ||= {
+      copies: 0,
       oddPages: 0,
       evenPages: 0,
       rangePages: 0,
       pricePerCopy: 0.0,
       price: 0.0,
-      printJobType: ''
+      printJobType: '',
+      stock: 0
     }
 
   listenRangeChanges: ->
