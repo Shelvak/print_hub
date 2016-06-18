@@ -95,6 +95,8 @@ class PrintsTest < ActionDispatch::IntegrationTest
   end
 
   test 'should schedule for final of the day' do
+    binding.pry
+
     login
 
     assert_page_has_no_errors!
@@ -109,7 +111,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
 
     within 'form.new_print' do
-      select(nil, from: 'print_printer') # the :blank option deprecated...
+      select '', from: 'print_printer'
       fill_in 'print_scheduled_at', with: ''
       assert page.has_css?('div.datetime_picker')
 

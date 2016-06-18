@@ -61,3 +61,10 @@
   # Debounce es usado para no triggerear 10mil veces el mismo evento
   debounce: (fn) ->
     _.debounce(fn, 500)
+
+  # Combina replaceWithRegEx con el valor del mismo elemento
+  replaceOwnAttrWithRegEx: (element, attr, regEx, newValue)
+    element.setAttribute(
+       attr,
+       Util.replaceWithRegEx(element.getAttribute(attr), regEx, newValue)
+     )

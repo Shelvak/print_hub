@@ -44,7 +44,7 @@
 
         r1Value - r2Value
 
-      _.each ranges, (r, _i)->
+      _.each ranges, (r)->
         data = r.match /^(\d+)(-(\d+))?$/
         n1 = parseInt(data[1], 10) if data
         n2 = parseInt(data[3], 10) if data
@@ -88,7 +88,7 @@
       'title',
       Util.replaceWithRegEx(money.getAttribute('title'), regEx, jobPrice)
     )
-    money.innerHTML = Util.replaceWithRegEx(money.innerText, regEx, jobPrice)
+    money.innerHTML = Util.replaceWithRegEx(money.innerHTML.trim(), regEx, jobPrice)
 
   updateCopiesForJob: (job) ->
     jobStorage = Jobs.assignDefaultOrGetJob(job)
@@ -108,7 +108,7 @@
 
   updateGlobalCopies: ->
     pagesList = {}
-    _.each Jobs.jobs, (jobStorage, _id)->
+    _.each Jobs.jobs, (jobStorage)->
       printJobType = jobStorage.printJobType
       oddPagesType = Jobs.oddPagesTypes[printJobType] || printJobType
 
@@ -139,7 +139,7 @@
     )
 
   updatePriceToAllJobs: ->
-    _.each Jobs.getPrintableJobs(), (job, _i) ->
+    _.each Jobs.getPrintableJobs(), (job) ->
       Jobs.updatePriceForJob(job)
       Jobs.changeMoneyTitleAndBadge(job)
 
@@ -159,8 +159,7 @@
     Print.updateTotalPrice()
 
   reCalcEverything: ->
-    console.log('milongueando')
-    _.each Jobs.getPrintableJobs(), (job, _i) ->
+    _.each Jobs.getPrintableJobs(), (job) ->
       Jobs.updateCopiesForJob(job)
 
     Jobs.updateGlobalCopies()

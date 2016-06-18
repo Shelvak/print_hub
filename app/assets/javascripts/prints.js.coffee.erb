@@ -16,15 +16,20 @@
 
   updateArticlesCount: ->
     articleCount = $('.article_line:not(.exclude-from-total)').length
-    title = $('a[href="#articles_container"]')
+    title = $('a[href="#articles_container"]')[0]
+    badge = title.querySelector('.badge')
 
-    if title.find('.badge').length == 0
-      count = $('<span class="badge badge-info"></span>')
-      title.append('&nbsp;').append(count)
+    if articleCount === 0
+      if badge
+        badge.remove()
+      return
 
-    title.find('.badge').text(articleCount)
-    title.find('.badge').remove() if articleCount == 0
+    if !badge
+      count = '&nbsp;<span class="badge badge-info"></span>')
+      title.innerHTML = title.innerHTML + count
+      badge = title.querySelector('.badge')
 
+    badge.innerHTML = articleCount
     Print.updateTotalPrice()
 
   updateStock: (printJob)->
@@ -34,7 +39,7 @@
 
     if stock > 0
       printedCopies = if stock > copies then 0 else copies - stock
-      printJob.find('.document_stock').html('#' + stock + '!' + printedCopies)
+      printJob.querySelector('.document_stock').innerHTML = '#' + stock + '!' + printedCopies
 
   updateTotalPrice: ->
     freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0
@@ -62,9 +67,9 @@
     $(Print.creditPrefix + '_paid').val(payWithBonus.toFixed(3))
 
   updateArticleLinePrice: (articleLine)->
-    units = parseInt(articleLine.find('input[name$="[units]"]').val(), 10)
+    units = parseInt(articleLine.querySelector('input[name$="[units]"]').value, 10)
     unitPrice = parseFloat(
-      articleLine.find('input[name$="[unit_price]"]').val()
+      articleLine.querySelector('input[name$="[unit_price]"]').value
     )
     articlePrice = (units * unitPrice) || 0.0
     articleStorage = Print.assignDefaultOrGetArticle(articleLine[0])
@@ -78,7 +83,7 @@
       }
     )
 
-    money = articleLine.find('span.money')
+    money = articleLine.querySelector('span.money')
     money.html(money.html().replace(/(\d+.)+\d+/, articlePrice.toFixed(3)))
 
     Print.updateTotalPrice()
@@ -103,16 +108,13 @@ new Rule
    @map.removeItem ||= (event, element)->
      if $(element).hasClass('print_job')
        Print.excludeElementFromTotal(element)
-
-       _.each Jobs.getPrintableJobs(), (printJob)->
-         Jobs.reCalcPages printJob
-
-       Print.updateTotalPrice()
+       Jobs.reCalcEverything()
 
      else if $(element).hasClass('article_line')
        Print.excludeElementFromTotal(element)
        Print.updateArticlesCount()
-       Print.updateTotalPrice()
+
+     Print.updateTotalPrice()
 
    # Después del autocomplete, completa con todos los datos
    @map.pagesAndPriceAfterAutocomplete ||= ->
@@ -121,30 +123,31 @@ new Rule
      if item.pages
        pages = item.pages
        stock = parseInt(item.stock)
-       $printJob = $(this).parents('.print_job:first')
-       printJob = $printJob[0]  # Have to improve everything to native js
-       printJobDetailsLink = $printJob.find('a.details-link')
-       printJobStockDetails = $printJob.find('.document_stock')
+       printJob = $(this).parents('.print_job:first')[0]  # Have to improve everything to native js
+       printJobDetailsLink = printJob.querySelector('a.details-link')
+       printJobStockDetails = printJob.querySelector('.document_stock')
 
        jobStorage = Jobs.assignDefaultOrGetJob(printJob)
-
-       $printJob.find('input[name$="[pages]"]').val(pages).attr('disabled', true)
-       printJobDetailsLink.attr(
-         'href', printJobDetailsLink.attr('href').replace(/\d+$/, item.id)
-       ).show()
-       $printJob.find('.dynamic_details').text('')
        jobStorage.rangePages = pages
 
+       pagesInput = printJob.querySelector('input[name$="[pages]"]')
+       pagesInput.value = pages
+       pagesInput.disabled = true
+
+       Util.replaceOwnAttrWithRegEx(printJobDetailsLink, 'href', /\d+$/, item.id)
+       Helper.show(printJobDetailsLink)
+
+       printJob.querySelector('.dynamic_details').innerHTML = ''
+
        if item.print_job_type
-         $printJob.find('select[name$="[print_job_type_id]"]')
-           .val(item.print_job_type).change()
+         printJob.querySelector('.js-print_job_type-selector').value = item.print_job_type
 
        if stock > 0
          jobStorage.stock = stock
-         printJobStockDetails.show()
+         Helper.show(printJobStockDetails)
          Print.updateStock(printJob)
        else
-         printJobStockDetails.hide()
+         Helper.hide(printJobStockDetails)
 
        Jobs.reCalcPages(printJob)
      else if item.unit_price
@@ -204,24 +207,23 @@ new Rule
 
    # Deshabilita el campo documento, y solo hace calculos contemplando paginas/copias
    @map.printJobWithoutDocument ||= ->
-     element = $(this)
-     $printJob = element.parents('.print_job')
-     printJob = $printJob[0]
+     element = this
+     elementValue = element.value || 0
+     printJob = element.parents('.print_job:first')[0]
      jobStorage = Jobs.assignDefaultOrGetJob(printJob)
-     range = $printJob.find('input[name$="[range]"]')
-     autoDocument = $printJob.find('input[name$="[auto_document_name]"]')
+     range = printJob.querySelector('.js-page-ranges')
+     autoDocument = printJob.querySelector('input[name$="[auto_document_name]"]')
 
-     if !element.attr('disabled') && parseInt(element.val()) > 0
-       range.attr('disabled', true)
-       autoDocument.attr('disabled', true)
+     if !element.disabled && parseInt(elementValue, 10) > 0
+       range.disabled = true
+       autoDocument.disabled = true
      else
-       range.removeAttr('disabled')
-       autoDocument.removeAttr('disabled')
+       range.disabled = false
+       autoDocument.disabled = false
 
-     jobStorage.rangePages = parseInt(element.val(), 10)
+     jobStorage.rangePages = parseInt(elementValue, 10)
 
      Jobs.reCalcPages(printJob)
-     Print.updateTotalPrice()
 
    # Actualiza el stock a imprimir
    @map.updateStock ||= ->
@@ -233,14 +235,12 @@ new Rule
    # Actualiza el precio de linea modificada
    @map.updateLinePrice ||= ->
      $element = $(this)
-     $printJob = $element.parents('.print_job')
+     $printJob = $element.parents('.js-printable-job')
 
      if $printJob.length > 0
        Jobs.reCalcPages($printJob[0])
      else if $element.parents('.article_line').length > 0
        Print.updateArticleLinePrice($element.parents('.article_line'))
-
-     Print.updateTotalPrice()
 
    # Pone los pagos en 0 (ya que va a cuenta corriente)
    @map.resetPayments ||= ->
@@ -299,7 +299,7 @@ new Rule
      @map.resetArticlesElements
    $(document).on 'autocomplete:update', 'input[name$="[auto_article_name]"]',
      Print.updateArticlesCount
-   $(document).on 'change keyup', 'input[name$="[pages]"]',
+   $(document).on 'change keyup', '.js-job-pages',
      Util.debounce(@map.printJobWithoutDocument)
    $(document).on 'keyup', '.js-job-copies', @map.updateStock
    $(document).on 'change keyup ph.price_modification',
@@ -311,6 +311,9 @@ new Rule
    $(document).on 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
    $(document).on 'keydown', @map.setShortCuts
 
+
+   Jobs.loadPricesData()
+   Jobs.reCalcEverything()
 
    if /^\s*$/.test($('#print_customer_id').val())
      $('#print_pay_later').parents('div.field').hide()
@@ -335,8 +338,3 @@ new Rule
    $(document).off 'click', '#link_to_customer_credit_detail', @map.showCustomerCredit
    $(document).off 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
    $(document).off 'keydown', @map.setShortCuts
-
-jQuery ($) ->
-  $(document).on 'page:change', ->
-    Jobs.loadPricesData()
-    Jobs.reCalcEverything()
