@@ -95,8 +95,6 @@ class PrintsTest < ActionDispatch::IntegrationTest
   end
 
   test 'should schedule for final of the day' do
-    binding.pry
-
     login
 
     assert_page_has_no_errors!

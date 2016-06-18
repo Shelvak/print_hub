@@ -63,8 +63,7 @@
     _.debounce(fn, 500)
 
   # Combina replaceWithRegEx con el valor del mismo elemento
-  replaceOwnAttrWithRegEx: (element, attr, regEx, newValue)
-    element.setAttribute(
-       attr,
-       Util.replaceWithRegEx(element.getAttribute(attr), regEx, newValue)
-     )
+  replaceOwnAttrWithRegEx: (element, attr, regEx, newValue)->
+    value = Util.replaceWithRegEx(element.getAttribute(attr), regEx, newValue)
+
+    element.setAttribute(attr, value)

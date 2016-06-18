@@ -19,14 +19,14 @@
     title = $('a[href="#articles_container"]')[0]
     badge = title.querySelector('.badge')
 
-    if articleCount === 0
+    if articleCount == 0
       if badge
         badge.remove()
       return
 
     if !badge
-      count = '&nbsp;<span class="badge badge-info"></span>')
-      title.innerHTML = title.innerHTML + count
+      count = '&nbsp;<span class="badge badge-info"></span>'
+      title.innerHTML += count
       badge = title.querySelector('.badge')
 
     badge.innerHTML = articleCount
@@ -123,7 +123,7 @@ new Rule
      if item.pages
        pages = item.pages
        stock = parseInt(item.stock)
-       printJob = $(this).parents('.print_job:first')[0]  # Have to improve everything to native js
+       printJob = $(this).parents('.print_job:first')[0]
        printJobDetailsLink = printJob.querySelector('a.details-link')
        printJobStockDetails = printJob.querySelector('.document_stock')
 
