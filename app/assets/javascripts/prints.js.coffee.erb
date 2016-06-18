@@ -72,7 +72,7 @@
       articleLine.querySelector('input[name$="[unit_price]"]').value
     )
     articlePrice = (units * unitPrice) || 0.0
-    articleStorage = Print.assignDefaultOrGetArticle(articleLine[0])
+    articleStorage = Print.assignDefaultOrGetArticle(articleLine)
 
     _.extend(
       articleStorage,
@@ -84,7 +84,9 @@
     )
 
     money = articleLine.querySelector('span.money')
-    money.html(money.html().replace(/(\d+.)+\d+/, articlePrice.toFixed(3)))
+    money.innerHTML = Util.replaceWithRegEx(
+      money.innerHTML.trim(), /(\d+.)+\d+/, articlePrice.toFixed(3)
+    )
 
     Print.updateTotalPrice()
 
@@ -136,8 +138,7 @@ new Rule
 
        Util.replaceOwnAttrWithRegEx(printJobDetailsLink, 'href', /\d+$/, item.id)
        Helper.show(printJobDetailsLink)
-
-       printJob.querySelector('.dynamic_details').innerHTML = ''
+       #printJob.querySelector('.dynamic_details').innerHTML = ''
 
        if item.print_job_type
          printJob.querySelector('.js-print_job_type-selector').value = item.print_job_type
@@ -152,11 +153,11 @@ new Rule
        Jobs.reCalcPages(printJob)
      else if item.unit_price
        unitPrice = parseFloat(item.unit_price).toFixed(3)
-       articleLine = $(this).parents('.article_line')
+       articleLine = $(this).parents('.article_line:first')
 
        articleLine.find('input[name$="[unit_price]"]').val(unitPrice)
 
-       Print.updateArticleLinePrice(articleLine)
+       Print.updateArticleLinePrice(articleLine[0])
      else if item.free_credit
        customerDetailsLink = $('#link_to_customer_credit_detail')
 
@@ -197,19 +198,19 @@ new Rule
    # Limpia articulo en caso de cambiar el _autocomplete_
    @map.resetArticlesElements ||= ->
      element = $(this)
-     articleLine = element.parents('.article_line')
+     articleLine = element.parents('.article_line:first')
 
      if articleLine.length > 0 && /^\s*$/.test(element.val())
        articleLine.find('input[name$="[units]"]').val('0')
        articleLine.find('input[name$="[unit_price]"]').val('')
 
-       Print.updateArticleLinePrice(articleLine)
+       Print.updateArticleLinePrice(articleLine[0])
 
    # Deshabilita el campo documento, y solo hace calculos contemplando paginas/copias
    @map.printJobWithoutDocument ||= ->
      element = this
      elementValue = element.value || 0
-     printJob = element.parents('.print_job:first')[0]
+     printJob = $(element).parents('.print_job:first')[0]
      jobStorage = Jobs.assignDefaultOrGetJob(printJob)
      range = printJob.querySelector('.js-page-ranges')
      autoDocument = printJob.querySelector('input[name$="[auto_document_name]"]')
@@ -239,8 +240,8 @@ new Rule
 
      if $printJob.length > 0
        Jobs.reCalcPages($printJob[0])
-     else if $element.parents('.article_line').length > 0
-       Print.updateArticleLinePrice($element.parents('.article_line'))
+     else if $element.parents('.article_line:first').length > 0
+       Print.updateArticleLinePrice($element.parents('.article_line:first')[0])
 
    # Pone los pagos en 0 (ya que va a cuenta corriente)
    @map.resetPayments ||= ->
@@ -252,9 +253,7 @@ new Rule
 
    # Muestra los detalles del documento
    @map.showDocumentDetails ||= (event, data)->
-     Helper.show(
-       $(this).parents('.print_job').find('.dynamic_details').hide().html(data)
-     )
+     $(this).parents('.print_job').find('.dynamic_details').hide().html(data).show()
 
    # Muestra el credito del cliente
    @map.showCustomerCredit ||= ->
