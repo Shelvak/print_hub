@@ -308,8 +308,6 @@ class PrintsTest < ActionDispatch::IntegrationTest
     customer = customers(:student)
     customer.prints.each(&:pay_print)
 
-    customer.prints.each(&:pay_print)
-
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
 

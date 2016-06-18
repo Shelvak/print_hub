@@ -102,7 +102,7 @@
 
 
 new Rule
-  condition: -> $('#ph_prints').length
+  condition: -> $('form.new_print').length
   load: ->
    # Elimina con efecto y recalcula
    @map.removeItem ||= (event, element)->
