@@ -7,21 +7,30 @@
   getDataFromPrintJobs: (attr)->
     JSON.parse(document.querySelector('.jobs-container').dataset[attr])
 
-  loadPricesData: ->
-    @Jobs.pricesList = @Jobs.getDataFromPrintJobs('pricesList')
-    @Jobs.oddPagesTypes = @Jobs.getDataFromPrintJobs('oddPagesTypes')
+  getPrintableJobs: ->
+    document.querySelectorAll('.js-printable-job:not(.exclude-from-total)')
 
-  assignDataToJob: (job)->
-    @Jobs.jobs[job.id] ||= {
-      copies: 0,
-      oddPages: 0,
-      evenPages: 0,
-      rangePages: 0,
-      pricePerCopy: 0.0,
-      price: 0.0,
-      printJobType: '',
-      stock: 0
-    }
+  loadPricesData: ->
+    Jobs.pricesList = Jobs.getDataFromPrintJobs('pricesList')
+    Jobs.oddPagesTypes = Jobs.getDataFromPrintJobs('oddPagesTypes')
+
+  assignDefaultOrGetJob: (job)->
+    Jobs.jobs[job.id] ||= {}
+    jobData = Jobs.jobs[job.id]
+    _.defaults(
+      jobData,
+      {
+        copies: 1,
+        oddPages: 0,
+        evenPages: 0,
+        rangePages: 0,
+        pricePerCopy: 0.0,
+        price: 0.0,
+        printJobType: 1,
+        stock: 0
+      }
+    )
+    jobData
 
   listenRangeChanges: ->
     $(document).on 'change blur', '.js-page-ranges', ->
@@ -49,78 +58,80 @@
 
       if (/^\s*$/.test(elementValue) || validRanges) && (!pages || !maxPage || pages >= maxPage)
         controlGroup.removeClass('error')
+        jobStorage = Jobs.assignDefaultOrGetJob(this)
 
         if /^\s*$/.test(elementValue) && pages
-          @Jobs.jobs[this.id].rangePages = pages
-          @Jobs.reCalcPages(this)
+          jobStorage.rangePages = pages
+          Jobs.reCalcPages(this)
         else if !/^\s*$/.test(elementValue) && validRanges
-          @Jobs.jobs[this.id].rangePages = rangePages
-          @Jobs.reCalcPages(this)
+          jobStorage.rangePages = rangePages
+          Jobs.reCalcPages(this)
       else
         controlGroup.addClass('error')
 
   updatePricePerCopyForJob: (job)->
-      jobStorage = @Jobs.jobs[job.id]
-      jobType = job.querySelector('.js-print_job_type-selector').value
+      jobStorage = Jobs.assignDefaultOrGetJob(job)
+      jobType = parseInt(job.querySelector('.js-print_job_type-selector').value, 10)
 
       jobStorage.printJobType = jobType
       jobStorage.pricePerCopy = PriceChooser.choose(
-        @Jobs.pricesList[jobType],
-        @Jobs.pagesList[jobType] || 0
+        Jobs.pricesList[jobType],
+        Jobs.pagesList[jobType] || 0
       )
 
   changeMoneyTitleAndBadge: (job)->
-      jobPrice = @Jobs.jobs[job.id].price.toFixed(3)
-      money = job.querySelector('span.money')
-      regEx = /(\d+\.\d+)$/
+    jobPrice = Jobs.assignDefaultOrGetJob(job).price.toFixed(3)
+    money = job.querySelector('span.money')
+    regEx = /(\d+\.\d+)$/
 
-      money.setAttribute(
-        'title',
-        Util.replaceWithRegEx(money.getAttribute('title'), regEx, jobPrice)
-      )
-      money.innerHTML = Util.replaceWithRegEx(money.innerText, regEx, jobPrice)
+    money.setAttribute(
+      'title',
+      Util.replaceWithRegEx(money.getAttribute('title'), regEx, jobPrice)
+    )
+    money.innerHTML = Util.replaceWithRegEx(money.innerText, regEx, jobPrice)
 
   updateCopiesForJob: (job) ->
-    jobStorage = @Jobs.jobs[job.id]
+    jobStorage = Jobs.assignDefaultOrGetJob(job)
     copies = parseInt(job.querySelector('.js-job-copies').value, 10)
     rangePages = jobStorage.rangePages
 
     if rangePages == 0
-      rangePages = parseInt(job.querySelector('.js-job-pages').value, 10)
+      rangePages = parseInt(job.querySelector('.js-job-pages').value || 0, 10)
       jobStorage.rangePages = rangePages
 
     oddPages = rangePages % 2
     evenPages = rangePages - oddPages
 
+    jobStorage.copies = copies
     jobStorage.oddPages = copies * oddPages
     jobStorage.evenPages = copies * evenPages
 
   updateGlobalCopies: ->
     pagesList = {}
-    _.each @Jobs.jobs, (jobStorage, _id)->
+    _.each Jobs.jobs, (jobStorage, _id)->
       printJobType = jobStorage.printJobType
-      oddPagesType = @Jobs.oddPagesTypes[printJobType] || printJobType
+      oddPagesType = Jobs.oddPagesTypes[printJobType] || printJobType
 
       pagesList[oddPagesType] ||= 0
       pagesList[oddPagesType] += jobStorage.oddPages || 0
       pagesList[printJobType] ||= 0
       pagesList[printJobType] += jobStorage.evenPages || 0
 
-    @Jobs.pagesList = pagesList
+    Jobs.pagesList = pagesList
 
   updatePriceForJob: (job)->
     # Has to run before others
-    evenPagesPrice = @Jobs.updatePricePerCopyForJob(job)
+    evenPagesPrice = Jobs.updatePricePerCopyForJob(job)
 
-    jobStorage = @Jobs.jobs[job.id]
+    jobStorage = Jobs.assignDefaultOrGetJob(job)
     jobType = jobStorage.printJobType
-    oddPagesType = @Jobs.oddPagesTypes[jobType] || jobType
+    oddPagesType = Jobs.oddPagesTypes[jobType] || jobType
     oddPages = jobStorage.oddPages
     evenPages = jobStorage.evenPages
 
     oddPagesPrice = PriceChooser.choose(
-      @Jobs.pricesList[oddPagesType],
-      @Jobs.pagesList[oddPagesType] || 0
+      Jobs.pricesList[oddPagesType],
+      Jobs.pagesList[oddPagesType] || 0
     )
 
     jobStorage.price = (
@@ -128,43 +139,43 @@
     )
 
   updatePriceToAllJobs: ->
-    _.each document.querySelectorAll('.js-printable-job'), (job, _i) ->
-      @Jobs.updatePriceForJob(job)
-      @Jobs.changeMoneyTitleAndBadge(job)
+    _.each Jobs.getPrintableJobs(), (job, _i) ->
+      Jobs.updatePriceForJob(job)
+      Jobs.changeMoneyTitleAndBadge(job)
 
   updateGlobalPrice: ->
-    @Jobs.globalPrice = _.reduce(
-      _.values(@Jobs.jobs),
+    Jobs.globalPrice = _.reduce(
+      _.values(Jobs.jobs),
       (memo, job)-> memo + job.price,
       0.0
     )
 
   updateTotalPrices: ->
-    Print.updateVisualTotallPrices()
+    Print.updateTotalPrices()
 
   reCalcPrices: ->
-    @Jobs.updatePriceToAllJobs()
-    @Jobs.updateGlobalPrice()
-    @Jobs.updateTotalPrices()
+    Jobs.updatePriceToAllJobs()
+    Jobs.updateGlobalPrice()
+    Print.updateTotalPrice()
 
   reCalcEverything: ->
     console.log('milongueando')
-    _.each document.querySelectorAll('.js-printable-job'), (job, _i) ->
-      @Jobs.updateCopiesForJob(job)
+    _.each Jobs.getPrintableJobs(), (job, _i) ->
+      Jobs.updateCopiesForJob(job)
 
-    @Jobs.updateGlobalCopies()
-    @Jobs.reCalcPrices()
+    Jobs.updateGlobalCopies()
+    Jobs.reCalcPrices()
 
   reCalcPages: (job)->
-    oldPageList = _.clone(@Jobs.pagesList)
+    oldPageList = _.clone(Jobs.pagesList)
     needToReCalcAll = false
 
-    @Jobs.updateCopiesForJob(job)
-    @Jobs.updateGlobalCopies()
+    Jobs.updateCopiesForJob(job)
+    Jobs.updateGlobalCopies()
 
-    _.each @Jobs.pageList, (pages, jobType) ->
+    _.each Jobs.pageList, (pages, jobType) ->
       oldPages = oldPageList[jobType] || 0
-      printJobPrice = @Jobs.pricesList[jobType]
+      printJobPrice = Jobs.pricesList[jobType]
 
       if (
         PriceChooser.choose(printJobPrice, oldPages).toFixed(3) !=
@@ -174,12 +185,13 @@
         return
 
     if needToReCalcAll
-      @Jobs.updatePriceToAllJobs()
+      Jobs.updatePriceToAllJobs()
     else
-      @Jobs.updatePriceForJob(job)
+      Jobs.updatePriceForJob(job)
+      Jobs.changeMoneyTitleAndBadge(job)
 
-    @Jobs.updateGlobalPrice()
-    @Jobs.updateTotalPrices()
+    Jobs.updateGlobalPrice()
+    Print.updateTotalPrice()
 
 
 
