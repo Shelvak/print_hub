@@ -59,10 +59,13 @@ group :development do
 end
 
 group :test do
+  # Integration test
   gem 'capybara', require: false
   gem 'selenium-webdriver'
+  gem 'capybara-screenshot'
   gem 'chromedriver-helper'
   gem 'database_cleaner', require: false # For Capybara
+
   gem 'minitest-reporters'
   gem 'test_after_commit'
 end

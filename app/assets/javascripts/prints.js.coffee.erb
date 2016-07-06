@@ -212,15 +212,14 @@ new Rule
      elementValue = element.value || 0
      printJob = $(element).parents('.print_job:first')[0]
      jobStorage = Jobs.assignDefaultOrGetJob(printJob)
-     range = printJob.querySelector('.js-page-ranges')
+     range = printJob.querySelector('.js-page-range')
      autoDocument = printJob.querySelector('input[name$="[auto_document_name]"]')
 
-     if !element.disabled && parseInt(elementValue, 10) > 0
-       range.disabled = true
-       autoDocument.disabled = true
-     else
-       range.disabled = false
-       autoDocument.disabled = false
+     rangeDisabled = !element.disabled && parseInt(elementValue, 10) > 0
+     range.disabled = rangeDisabled
+
+     if autoDocument
+       autoDocument.disabled = rangeDisabled
 
      jobStorage.rangePages = parseInt(elementValue, 10)
 

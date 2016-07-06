@@ -33,7 +33,7 @@
     jobData
 
   listenRangeChanges: ->
-    $(document).on 'change blur', '.js-page-ranges', ->
+    $(document).on 'change blur', '.js-page-range', ->
       $element = $(this)
       elementValue = this.value
       [validRanges, maxPage, rangePages] = [true, null, 0]
@@ -82,7 +82,7 @@
   changeMoneyTitleAndBadge: (job)->
     jobPrice = Jobs.assignDefaultOrGetJob(job).price.toFixed(3)
     money = job.querySelector('span.money')
-    regEx = /(\d+\.\d+)$/
+    regEx = /(\d+\.\d+|NaN)$/
 
     money.setAttribute(
       'title',
@@ -92,7 +92,7 @@
 
   updateCopiesForJob: (job) ->
     jobStorage = Jobs.assignDefaultOrGetJob(job)
-    copies = parseInt(job.querySelector('.js-job-copies').value, 10)
+    copies = parseInt(job.querySelector('.js-job-copies').value || 0, 10)
     rangePages = jobStorage.rangePages
 
     if rangePages == 0

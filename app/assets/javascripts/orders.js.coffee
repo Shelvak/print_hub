@@ -21,7 +21,7 @@
 
   updateOrderLinePrice: (orderLine)->
     Order.updateTotalPages()
-    Jobs.updatePricePerCopy('.order_line')
+    Jobs.reCalcPages(orderLine[0])
 
     orderLinesContainer = $('div[data-jobs-container]')
     mediaType = orderLine.find(
@@ -34,7 +34,7 @@
     rest = (pages % 2)
 
     pricePerCopy = orderLine.data('price-per-copy')
-    oneSidedType = orderLinesContainer.data('prices-one-sided')[mediaType] || mediaType
+    oneSidedType = orderLinesContainer.data('odd-pages-types')[mediaType] || mediaType
     oneSidedSettings = orderLinesContainer.data('prices-list')[oneSidedType]
     mediaPages = orderLinesContainer.data('pages-list')[mediaType]
 
@@ -66,7 +66,7 @@
 
       jobType = $(ol).find('select[name$="[print_job_type_id]"] :selected').val()
       oneSidedType = (
-        jobsContainer.data('prices-one-sided')[jobType] || jobType
+        jobsContainer.data('odd-pages-types')[jobType] || jobType
       )
 
       list = {}
@@ -93,7 +93,8 @@ new Rule
   load: ->
     # Actualizar precios
     Order.updateAllOrderLines()
-    Jobs.listenPrintJobTypeChanges('.order_line')
+    $(document).on 'change keyup',  '.price-modifier', ->
+      Util.debounce(Jobs.reCalcPages)
 
     # Mostrar detalles del documento
     @map.showDocumentDetails ||= (event, data)->
