@@ -33,7 +33,7 @@ class ShiftTest < ActiveSupport::TestCase
   test 'update' do
     start = 10.minute.ago.to_datetime
     finish = 1.minute.ago.to_datetime
-    old_start = @shift.start.to_i
+    # old_start = @shift.start.to_i
 
     assert_no_difference 'Shift.count' do
       assert @shift.update(start: start, finish: finish),
@@ -41,7 +41,7 @@ class ShiftTest < ActiveSupport::TestCase
     end
 
     assert_equal start.to_i, @shift.reload.start.to_i
-    assert_not_equal old_start, @shift.reload.start.to_i
+    # assert_not_equal old_start, @shift.reload.start.to_i # Ahora se permite actualizar
     assert_equal finish.to_i, @shift.finish.to_i
   end
 

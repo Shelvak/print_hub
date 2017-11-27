@@ -86,7 +86,11 @@ class ActiveSupport::TestCase
   end
 
   def job_count(print_jobs)
-    print_jobs.map(&:copies).compact.sum
+    print_jobs.map(&:copies).map(&:to_i).sum
+  end
+
+  def cups_prints_count
+    Cups.all_jobs(@printer).keys.size
   end
 
   def drop_all_prints
