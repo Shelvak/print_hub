@@ -90,7 +90,7 @@ class ActiveSupport::TestCase
   end
 
   def cups_prints_count
-    Cups.all_jobs(@printer).keys.size
+    Cups.all_jobs(@printer).keys.sort.last || 1
   end
 
   def drop_all_prints

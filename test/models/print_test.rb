@@ -26,7 +26,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión
   test 'create' do
     counts = ['Print.count', 'Payment.count', 'ArticleLine.count',
-              'Cups.all_jobs(@printer).keys.sort.last']
+              'cups_prints_count']
 
     assert_difference counts do
       assert_difference 'PrintJob.count', 2 do
@@ -117,7 +117,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión programada
   test 'create scheduled' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
-      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      assert_no_difference 'cups_prints_count' do
         @print = Print.create(printer: '',
                               user_id: @operator.id,
                               scheduled_at: 2.hours.from_now,
@@ -155,7 +155,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión que evita imprimir =)
   test 'create with avoid printing' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
-      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      assert_no_difference 'cups_prints_count' do
         @print = Print.create(printer: @printer,
                               user_id: @operator.id,
                               scheduled_at: '',
@@ -197,7 +197,7 @@ class PrintTest < ActiveSupport::TestCase
 
     assert_difference ['Print.count', 'Payment.count'] do
       assert_difference 'PrintJob.count', 2 do
-        assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        assert_no_difference 'cups_prints_count' do
           @print = Print.create(printer: @printer,
                                 user_id: @operator.id,
                                 scheduled_at: '',
@@ -244,7 +244,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'create with free credit' do
     UserSession.create(users(:operator))
     counts = ['Print.count', 'Payment.count',
-              'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
+              'cups_prints_count', 'ArticleLine.count']
 
     assert_difference counts do
       assert_difference 'PrintJob.count', 2 do
@@ -298,7 +298,7 @@ class PrintTest < ActiveSupport::TestCase
 
   test 'create with free credit and wrong password' do
     counts = ['Print.count', 'PrintJob.count', 'Payment.count',
-              'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
+              'cups_prints_count', 'ArticleLine.count']
 
     assert_no_difference counts do
       @print = Print.create(printer: @printer,
@@ -335,7 +335,7 @@ class PrintTest < ActiveSupport::TestCase
     )
 
     assert_difference ['Print.count', 'ArticleLine.count'] do
-      assert_difference 'Cups.all_jobs(@printer).keys.sort.last', 110 do
+      assert_difference 'cups_prints_count', 110 do
         assert_difference ['PrintJob.count', 'Payment.count'], 2 do
           @print = Print.create(printer: @printer,
                                 user_id: @operator.id,
@@ -396,7 +396,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión con documentos incluidos
   test 'create with included documents' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
-      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      assert_no_difference 'cups_prints_count' do
         @print = Print.create(printer: @printer,
                               user_id: @operator.id,
                               scheduled_at: '',
@@ -430,7 +430,7 @@ class PrintTest < ActiveSupport::TestCase
 
     assert_difference ['Print.count', 'Payment.count'] do
       assert_difference 'PrintJob.count', 3 do
-        assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        assert_no_difference 'cups_prints_count' do
           @print = Print.create(printer: @printer,
                                 user_id: @operator.id,
                                 scheduled_at: '',
@@ -467,7 +467,7 @@ class PrintTest < ActiveSupport::TestCase
     customer.group_id = CustomersGroup.last.id
     customer.save
     assert_difference ['Print.count',
-                       'Cups.all_jobs(@printer).keys.sort.last'] do
+                       'cups_prints_count'] do
       assert_difference 'PrintJob.count', 2 do
         assert_no_difference 'Payment.count' do
           @print = Print.create(
@@ -511,7 +511,7 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba de actualización de una impresión
   test 'can not update' do
-    counts = ['Print.count', 'Cups.all_jobs(@printer).keys.sort.last']
+    counts = ['Print.count', 'cups_prints_count']
 
     assert_not_equal customers(:teacher).id, @print.customer_id
 
@@ -713,18 +713,15 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'print all jobs' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
     new_print = build_new_print_from(@print)
 
-    assert_difference cups_count, job_count(@print.print_jobs) do
+    assert_difference 'cups_prints_count', job_count(@print.print_jobs) do
       new_print.print_all_jobs
     end
   end
 
   test 'print no jobs' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
-
-    assert_no_difference cups_count do
+    assert_no_difference 'cups_prints_count' do
       @print.print_all_jobs
     end
   end

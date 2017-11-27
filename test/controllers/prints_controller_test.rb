@@ -152,7 +152,7 @@ class PrintsControllerTest < ActionController::TestCase
     document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
                     'customer.prints.count', 'ArticleLine.count',
-                    'Cups.all_jobs(@printer).keys.sort.last']
+                    'cups_prints_count']
     customer = customers(:student)
 
     assert_difference counts_array do
@@ -204,7 +204,7 @@ class PrintsControllerTest < ActionController::TestCase
     document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
                     'customer.prints.count', 'ArticleLine.count',
-                    'Cups.all_jobs(@printer).keys.sort.last']
+                    'cups_prints_count']
     customer = customers(:student)
     customer.update(rfid: '123123')
 
@@ -259,7 +259,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_difference counts_array do
       assert_difference 'PaperTrail::Version.count', 3 do
-        assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        assert_no_difference 'cups_prints_count' do
           post :create, status: 'all', print: {
             printer: @printer,
             customer_id: '',
@@ -300,7 +300,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-                    'customer.prints.count', 'Cups.all_jobs(@printer).keys.sort.last']
+                    'customer.prints.count', 'cups_prints_count']
     customer = customers(:student)
 
     assert_difference counts_array do
@@ -556,7 +556,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     document = documents(:math_book)
 
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+    assert_difference 'cups_prints_count' do
       post :create, status: 'all', print: {
         printer: @printer,
         scheduled_at: '',
