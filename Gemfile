@@ -73,3 +73,5 @@ group :test do
 
   gem 'parallel_tests'
 end
+
+gem 'httpclient'
