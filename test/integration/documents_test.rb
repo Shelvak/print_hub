@@ -76,6 +76,10 @@ class DocumentsTest < ActionDispatch::IntegrationTest
         assert_difference 'first_tag.reload.documents_count', -1 do
           within "div#tag_#{first_tag.id}" do
             first(:css, '[data-event=removeItem]').click
+            attach_file(
+              Document.human_attribute_name('file'),
+              File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
+            )
             sleep 1
           end
 
