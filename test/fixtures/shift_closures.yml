@@ -6,5 +6,5 @@ first:
   failed_copies: <%= rand(100) %>
   user: operator
   helper_user_id:
-  printers_stats: '<%= { printer_1: 321 }.to_json %>'
+  printers_stats: '<%= { printer_1: 1 }.to_json %>'
   comments: really quite

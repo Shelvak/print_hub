@@ -51,7 +51,7 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def printers
-    Cups.show_destinations.sort
+    [Cups.show_destinations.sort + self.printers_stats.keys].flatten.uniq
   end
 
   def printers_with_counters
