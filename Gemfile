@@ -61,7 +61,7 @@ end
 
 group :test do
   # Integration test
-  gem 'capybara', require: false
+  gem 'capybara', '~> 2.15', require: false
   gem 'selenium-webdriver', '2.53.3'
   gem 'capybara-screenshot', require: false
   gem 'chromedriver-helper', require: false
