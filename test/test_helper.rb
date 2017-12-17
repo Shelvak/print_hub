@@ -32,12 +32,12 @@ class ActiveSupport::TestCase
     User.all.each { |user| link_file user.avatar.path, 'test.gif' }
   end
 
-  def pdf_test_file
-    process_with_action_dispatch('test.pdf', 'application/pdf')
+  def pdf_test_file(file='test.pdf')
+    process_for_upload(file, 'application/pdf')
   end
 
   def avatar_test_file
-    process_with_action_dispatch('test.gif', 'image/gif')
+    process_for_upload('test.gif', 'image/gif')
   end
 
   def new_generic_operator(atributes = {})
@@ -64,15 +64,11 @@ class ActiveSupport::TestCase
 
   private
 
-  def process_with_action_dispatch(filename, content_type)
-    ActionDispatch::Http::UploadedFile.new({
-                                             filename: filename,
-                                             content_type: content_type,
-                                             tempfile:
-      File.open( # Need File.open for path-method
-        Rails.root.join('test', 'fixtures', 'files', filename)
-      )
-                                           })
+  def process_for_upload(filename, content_type)
+    Rack::Test::UploadedFile.new(
+      Rails.root.join('test', 'fixtures', 'files', filename),
+      content_type
+    )
   end
 
   def link_file(destiny_file, link_from)

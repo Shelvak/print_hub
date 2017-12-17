@@ -250,7 +250,7 @@ class CustomersControllerTest < ActionController::TestCase
   test 'should get credit detail' do
     UserSession.create(@operator)
 
-    get :credit_detail, id: @customer.to_param, xhr: true
+    get :credit_detail, params: { id: @customer.to_param }, xhr: true
 
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -325,7 +325,7 @@ class CustomersControllerTest < ActionController::TestCase
   test 'should pay off customer debt' do
     UserSession.create(@operator)
 
-    put :pay_off_debt, id: @customer.to_param, xhr: true
+    put :pay_off_debt, params: { id: @customer.to_param }, xhr: true
 
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -338,7 +338,7 @@ class CustomersControllerTest < ActionController::TestCase
 
     month = @customer.months_to_pay.last
 
-    put :pay_month_debt, id: @customer.to_param, date: "#{month.last}-#{month.first}-1", xhr: true
+    put :pay_month_debt, params: {id: @customer.to_param, date: "#{month.last}-#{month.first}-1", xhr: true}
 
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -350,7 +350,7 @@ class CustomersControllerTest < ActionController::TestCase
     UserSession.create(@operator)
     @customer.update(rfid: '123123')
 
-    put :use_rfid, id: @customer.to_param, rfid: '123123', xhr: true
+    put :use_rfid, params: { id: @customer.to_param, rfid: '123123' }, xhr: true
 
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -362,7 +362,7 @@ class CustomersControllerTest < ActionController::TestCase
     UserSession.create(@operator)
     @customer.update(rfid: '123123')
 
-    put :use_rfid, id: @customer.to_param, rfid: '111111', xhr: true
+    put :use_rfid, params: { id: @customer.to_param, rfid: '111111' }, xhr: true
 
     assert_response :success
     resp = JSON.parse(@response.body)
@@ -373,7 +373,7 @@ class CustomersControllerTest < ActionController::TestCase
     UserSession.create(@operator)
     assert_nil @customer.rfid
 
-    post :assign_rfid, id: @customer.to_param, rfid: '123123', xhr: true
+    post :assign_rfid, params: { id: @customer.to_param, rfid: '123123' }, xhr: true
 
     assert_response :success
   end

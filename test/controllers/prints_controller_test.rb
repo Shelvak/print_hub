@@ -584,7 +584,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_not_equal :cancelled, Cups.all_jobs(@printer)[print_job_job_id][:state]
 
-    put :cancel_job, id: print_job.to_param, status: 'all', xhr: true
+    put :cancel_job, params: { id: print_job.to_param, status: 'all' }, xhr: true
 
     assert_response :success
     assert_match /#{I18n.t(:job_canceled, scope: [:view, :prints])}/,
@@ -599,7 +599,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     print_job = print_jobs(:math_job_1)
 
-    put :cancel_job, id: print_job.to_param, status: 'all', xhr: true
+    put :cancel_job, params: { id: print_job.to_param, status: 'all' }, xhr: true
 
     assert_response :success
     assert_match /#{I18n.t(:job_not_canceled, scope: [:view, :prints])}/,

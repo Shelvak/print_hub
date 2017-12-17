@@ -52,7 +52,7 @@ class CatalogControllerTest < ActionController::TestCase
 
     i18n_scope = [:view, :catalog, :remove_from_order]
 
-    post :add_to_order, id: @document.to_param, xhr: true
+    post :add_to_order, params: { id: @document.to_param }, xhr: true, format: :js
     assert_response :success
     assert_match /#{I18n.t(:title, scope: i18n_scope)}/, @response.body
     assert session[:documents_to_order].include?(@document.id)
@@ -61,13 +61,26 @@ class CatalogControllerTest < ActionController::TestCase
   test 'should remove document from next print' do
     assert session[:documents_to_order].blank?
 
+    $tuhna = true
     session[:documents_to_order] = [@document.id]
     i18n_scope = [:view, :catalog, :add_to_order]
 
-    delete :remove_from_order, id: @document.to_param, xhr: true
+    p "-------------------------"
+    p "-------------------------"
+    p "-------------------------"
+    p "-------------------------"
+    # set_trace_func proc { |event, file, line, id, binding, classname|
+    #   File.open('manso_trace.log', 'ab') do |f|
+    #     f.write("%8s %s:%-2d %10s %8s\n" % [event, file, line, id, classname])
+    #   end
+    # }
+    delete :remove_from_order, params: { id: @document.id }, xhr: true
+    p "-------------------------"
+    p "-------------------------"
+    p "-------------------------"
+    p "-------------------------"
     assert_response :success
-    assert_match /#{I18n.t(:title, scope: i18n_scope)}/,
-                 @response.body
+    assert_match /#{I18n.t(:title, scope: i18n_scope)}/, @response.body
     assert !session[:documents_to_order].include?(@document.id)
 
     assert session[:documents_to_order].blank?

@@ -156,7 +156,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
     i18n_scope = [:view, :documents, :remove_from_next_print]
 
-    post :add_to_next_print, id: @document.to_param, xhr: true
+    post :add_to_next_print, params: { id: @document.to_param }, xhr: true
     assert_response :success
     assert_match /#{I18n.t(:title, scope: i18n_scope)}/, @response.body
     assert session[:documents_for_printing].include?(@document.id)
@@ -168,7 +168,7 @@ class DocumentsControllerTest < ActionController::TestCase
     session[:documents_for_printing] = [@document.id]
     i18n_scope = [:view, :documents, :add_to_next_print]
 
-    delete :remove_from_next_print, id: @document.to_param, xhr: true
+    delete :remove_from_next_print, params: { id: @document.to_param }, xhr: true
     assert_response :success
     assert_match /#{I18n.t(:title, scope: i18n_scope)}/,
                  @response.body

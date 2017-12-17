@@ -181,11 +181,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should upload file' do
     CustomerSession.create(customers(:student_without_bonus))
 
-    file = ActionDispatch::Http::UploadedFile.new(filename: 'test.pdf',
-                                                  content_type: 'application/pdf',
-                                                  tempfile: File.new(File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')))
-
-    post :upload_file, params: { file_line: { file: [file] } }
+    post :upload_file, params: { file_line: { file: [pdf_test_file] } }
 
     assert_response :success
     # assert_select '#unexpected_error', false

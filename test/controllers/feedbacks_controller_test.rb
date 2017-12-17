@@ -24,10 +24,10 @@ class FeedbacksControllerTest < ActionController::TestCase
   test 'should update feedback' do
     feedback = feedbacks(:needs_polishing)
 
-    put :update, id: feedback.to_param, feedback: {
+    put :update, params: { id: feedback.to_param, feedback: {
       item: 'this_should_be_ignored',
       comments: 'It seems to me that needs polishing'
-    }, xhr: true
+    } }, xhr: true
 
     assert_response :success
     # assert_select '#unexpected_error', false
