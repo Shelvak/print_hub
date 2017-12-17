@@ -146,7 +146,7 @@ class Document < ApplicationModel
   def extract_page_count
     PDF::Reader.new(file.path).tap do |pdf|
       self.pages = pdf.page_count
-    end if file_file_name_changed?
+    end if saved_change_to_file_file_name?
 
   rescue PDF::Reader::MalformedPDFError
     false
@@ -254,7 +254,7 @@ class Document < ApplicationModel
   end
 
   def update_file_attributes
-    if file.present? && file_file_name_changed?
+    if file.present? && saved_change_to_file_file_name?
       self.file_content_type = file.file.content_type
       self.file_file_size = file.file.size
       self.file_updated_at = Time.zone.now
@@ -262,7 +262,7 @@ class Document < ApplicationModel
   end
 
   def recreate_versions
-    if file_file_name_changed?
+    if saved_change_to_file_file_name?
       begin
         file.recreate_versions! unless @versions_ready
       rescue => e

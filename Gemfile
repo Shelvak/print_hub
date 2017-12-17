@@ -1,9 +1,14 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2'
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
+gem 'rails', '~> 5.1'
 
 gem 'pg'
-gem 'authlogic', '3.4.6'
+gem 'authlogic', '~> 3'
 gem 'jc-validates_timeliness'
 gem 'awesome_nested_set'
 gem 'will_paginate'
@@ -37,7 +42,7 @@ gem 'bugsnag'
 
 # Old assets group / Styles & js
 gem 'sass-rails'
-gem 'coffee-rails'
+gem 'coffee-rails', '~> 4.2'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
@@ -68,7 +73,7 @@ group :test do
   gem 'database_cleaner', require: false # For Capybara
 
   gem 'minitest-reporters'
-  gem 'test_after_commit'
+  # gem 'test_after_commit'
 
   gem 'parallel_tests'
 end

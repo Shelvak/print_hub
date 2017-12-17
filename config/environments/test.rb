@@ -8,8 +8,10 @@ Rails.application.configure do
   config.cache_classes = false
 
   # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_files = true
-  config.static_cache_control = 'public, max-age=3600'
+  config.public_file_server.enabled = true
+  config.public_file_server.headers = {
+    'Cache-Control' => "public, max-age=#{1.hour.seconds.to_i}"
+  }
 
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
@@ -30,15 +32,13 @@ Rails.application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
+  config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
-
-  # Randomize the order test cases are executed.
-  config.active_support.test_order = :random
 
   # Parallel
   config.cache_store = :file_store, Rails.root.join("tmp", "cache", "paralleltests#{ENV['TEST_ENV_NUMBER']}")

@@ -50,9 +50,9 @@ class Tag < ApplicationModel
   end
 
   def update_related_documents
-    documents.each { |d| d.update_tag_path self } if self.name_changed?
+    documents.each { |d| d.update_tag_path self } if self.saved_change_to_name?
 
-    documents.each { |d| d.update_privacy self } if self.private_changed?
+    documents.each { |d| d.update_privacy self } if self.saved_change_to_private?
 
     true
   end

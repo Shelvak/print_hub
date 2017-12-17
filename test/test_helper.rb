@@ -14,7 +14,7 @@ Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!
   set_fixture_class versions: PaperTrail::Version
-  self.use_transactional_fixtures = true
+  # self.use_transactional_fixtures = true
 
   fixtures :all
 
@@ -128,7 +128,7 @@ class ActionDispatch::IntegrationTest
   # from. We hence use DatabaseCleaner to truncate our test database.
   DatabaseCleaner.strategy = :truncation
   # Stop ActiveRecord from wrapping tests in transactions
-  self.use_transactional_fixtures = false
+  # self.use_transactional_fixtures = false
 
   def self._running_remote
     ENV['remote']

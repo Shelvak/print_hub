@@ -26,7 +26,7 @@ class FileLine < ActiveRecord::Base
   end
 
   def extract_page_count
-    if self.file_changed?
+    if self.saved_change_to_file?
       PDF::Reader.new(file.current_path).tap do |pdf|
         self.pages = pdf.page_count
       end
