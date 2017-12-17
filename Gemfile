@@ -73,9 +73,6 @@ group :test do
   gem 'poltergeist', require: false
   gem 'database_cleaner', require: false # For Capybara
 
-  # gem 'minitest-reporters'
-  # gem 'test_after_commit'
-
   gem 'parallel_tests'
   gem 'rails-controller-testing'
 end
