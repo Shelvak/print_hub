@@ -124,7 +124,7 @@ class OrderTest < ActiveSupport::TestCase
     @order.completed!
     assert @order.save
 
-    assert !@order.update_attributes(
+    assert !@order.update(
       scheduled_at: 5.days.from_now.at_midnight
     )
 

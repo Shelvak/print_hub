@@ -4,16 +4,17 @@ require 'authlogic/test_case'
 require 'capybara/rails'
 require 'sidekiq/testing'
 require 'database_cleaner'
-require 'minitest/reporters'
+# require 'minitest/reporters'
 require 'capybara-screenshot/minitest'
 require 'capybara/poltergeist'
 
-Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
+# Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!
   set_fixture_class versions: PaperTrail::Version
   # self.use_transactional_fixtures = true
+  # Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
   fixtures :all
 

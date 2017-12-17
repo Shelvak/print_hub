@@ -1,3 +1,5 @@
+require 'test_helper'
+
 # Clase para probar el modelo "Print"
 class PrintTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
@@ -472,7 +474,7 @@ class PrintTest < ActiveSupport::TestCase
         assert_no_difference 'Payment.count' do
           @print = Print.create(
             printer: @printer,
-            user_id: nil,
+            user_id: @operator.id,
             customer_id: customers(:student_without_bonus).id,
             scheduled_at: '',
             avoid_printing: false,
