@@ -332,9 +332,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit and cash' do
-    file_line = FileLine.create(
-      file: process_with_action_dispatch('test.pdf', 'application/pdf')
-    )
+    file_line = FileLine.create( file: pdf_test_file)
 
     assert_difference ['Print.count', 'ArticleLine.count'] do
       assert_difference 'Cups.all_jobs(@printer).keys.sort.last', 110 do

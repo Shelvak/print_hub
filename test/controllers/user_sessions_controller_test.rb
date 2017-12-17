@@ -10,7 +10,7 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:user_session)
     # assert_select '#unexpected_error', false
-    # assert_template 'user_sessions/new'
+    assert_template 'user_sessions/new'
   end
 
   test 'should create user session' do
@@ -88,7 +88,7 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:user_session)
     # assert_select '#unexpected_error', false
-    # assert_template 'user_sessions/new'
+    assert_template 'user_sessions/new'
   end
 
   test 'should not create a user session with a disabled user' do
@@ -107,7 +107,7 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:user_session)
     # assert_select '#unexpected_error', false
-    # assert_template 'user_sessions/new'
+    assert_template 'user_sessions/new'
   end
 
   test 'should destroy user session and close shift' do

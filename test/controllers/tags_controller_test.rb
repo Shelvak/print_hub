@@ -12,7 +12,7 @@ class TagsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:tags)
     # assert_select 'nav ul.breadcrumb', false
     # assert_select '#unexpected_error', false
-    # assert_template 'tags/index'
+    assert_template 'tags/index'
   end
 
   test 'should get nested index' do
@@ -21,7 +21,7 @@ class TagsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:tags)
     # assert_select 'nav ul.breadcrumb'
     # assert_select '#unexpected_error', false
-    # assert_template 'tags/index'
+    assert_template 'tags/index'
   end
 
   test 'should get new' do
@@ -29,7 +29,7 @@ class TagsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:tag)
     # assert_select '#unexpected_error', false
-    # assert_template 'tags/new'
+    assert_template 'tags/new'
   end
 
   test 'should create tag' do
@@ -51,7 +51,7 @@ class TagsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:tag)
     # assert_select '#unexpected_error', false
-    # assert_template 'tags/show'
+    assert_template 'tags/show'
   end
 
   test 'should get edit' do
@@ -59,7 +59,7 @@ class TagsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:tag)
     # assert_select '#unexpected_error', false
-    # assert_template 'tags/edit'
+    assert_template 'tags/edit'
   end
 
   test 'should update tag' do

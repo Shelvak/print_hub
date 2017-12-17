@@ -14,7 +14,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:users)
     # assert_select '#unexpected_error', false
-    # assert_template 'users/index'
+    assert_template 'users/index'
   end
 
   test 'should get new' do
@@ -22,7 +22,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:user)
     # assert_select '#unexpected_error', false
-    # assert_template 'users/new'
+    assert_template 'users/new'
   end
 
   test 'should create user' do
@@ -55,7 +55,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:user)
     # assert_select '#unexpected_error', false
-    # assert_template 'users/show'
+    assert_template 'users/show'
   end
 
   test 'should get edit' do
@@ -63,7 +63,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:user)
     # assert_select '#unexpected_error', false
-    # assert_template 'users/edit'
+    assert_template 'users/edit'
   end
 
   test 'should update user' do

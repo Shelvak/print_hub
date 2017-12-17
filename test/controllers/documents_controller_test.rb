@@ -16,7 +16,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:documents)
     assert_not_nil assigns(:documents_for_printing)
     # assert_select '#unexpected_error', false
-    # assert_template 'documents/index'
+    assert_template 'documents/index'
   end
 
   test 'should get index with tag filter' do
@@ -28,7 +28,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_equal tag.documents.count, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.tags.include?(tag) }
     # assert_select '#unexpected_error', false
-    # assert_template 'documents/index'
+    assert_template 'documents/index'
   end
 
   test 'should get index with search filter' do
@@ -38,7 +38,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_equal 2, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.name.match(/math/i) }
     # assert_select '#unexpected_error', false
-    # assert_template 'documents/index'
+    assert_template 'documents/index'
   end
 
   test 'should clear documents for printing' do
@@ -53,7 +53,7 @@ class DocumentsControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'documents/new'
+    assert_template 'documents/new'
   end
 
   test 'should create document' do
@@ -89,14 +89,14 @@ class DocumentsControllerTest < ActionController::TestCase
     get :show, params: { id: @document.to_param }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'documents/show'
+    assert_template 'documents/show'
   end
 
   test 'should get edit' do
     get :edit, params: { id: @document.to_param }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'documents/edit'
+    assert_template 'documents/edit'
   end
 
   test 'should update document' do
@@ -139,7 +139,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:document)
     # assert_select '#unexpected_error', false
     # assert_select 'figcaption', @document.code.to_s
-    # assert_template 'documents/barcode'
+    assert_template 'documents/barcode'
   end
 
   test 'should get barcode of new document' do
@@ -148,7 +148,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:document)
     # assert_select '#unexpected_error', false
     # assert_select 'figcaption', '159321'
-    # assert_template 'documents/barcode'
+    assert_template 'documents/barcode'
   end
 
   test 'should add document to next print' do
@@ -211,6 +211,6 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_equal disabled_documents, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.name.match(/disabled/i) }
     # assert_select '#unexpected_error', false
-    # assert_template 'documents/index'
+    assert_template 'documents/index'
   end
 end

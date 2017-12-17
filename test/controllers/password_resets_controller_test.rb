@@ -10,7 +10,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'password_resets/new'
+    assert_template 'password_resets/new'
   end
 
   test 'should create' do
@@ -28,7 +28,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
       assert_response :success
       assert_equal I18n.t('view.password_resets.email_not_found'), flash.notice
       # assert_select '#unexpected_error', false
-      # assert_template 'password_resets/new'
+      assert_template 'password_resets/new'
     end
   end
 
@@ -37,7 +37,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'password_resets/edit'
+    assert_template 'password_resets/edit'
   end
 
   test 'should get edit with wrong token' do
@@ -45,7 +45,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_response :success
     assert_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'password_resets/edit'
+    assert_template 'password_resets/edit'
   end
 
   test 'should update' do

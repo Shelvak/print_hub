@@ -25,7 +25,7 @@ class Document < ApplicationModel
   after_destroy :update_tags_documents_count
 
   # Restricciones
-  validates :name, :code, :pages, :media, presence: true
+  validates :name, :code, :pages, :media, :file, presence: true
   validates :code, uniqueness: true, if: :enable, allow_nil: true,
                    allow_blank: true
   validates :name, :media, length: { maximum: 255 }, allow_nil: true,

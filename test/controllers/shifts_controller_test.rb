@@ -12,7 +12,7 @@ class ShiftsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:shifts)
     # assert_select '#unexpected_error', false
-    # assert_template 'shifts/index'
+    assert_template 'shifts/index'
   end
 
   test 'should create shift' do
@@ -34,14 +34,14 @@ class ShiftsControllerTest < ActionController::TestCase
     get :show, params: { id: @shift }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'shifts/show'
+    assert_template 'shifts/show'
   end
 
   test 'should get edit' do
     get :edit, params: { id: @shift }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'shifts/edit'
+    assert_template 'shifts/edit'
   end
 
   test 'should update shift' do
@@ -60,6 +60,8 @@ class ShiftsControllerTest < ActionController::TestCase
 
   test 'should update stale shift' do
     shift = shifts(:open_shift)
+    shift.user = users(:operator)
+    shift.save!
     session[:has_an_open_shift] = true
 
     5.hours.ago.to_datetime.tap do |finish|

@@ -13,14 +13,14 @@ class ArticlesControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:articles)
     # assert_select '#unexpected_error', false
-    # assert_template 'articles/index'
+    assert_template 'articles/index'
   end
 
   test 'should get new' do
     get :new
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'articles/new'
+    assert_template 'articles/new'
   end
 
   test 'should create article' do
@@ -44,14 +44,14 @@ class ArticlesControllerTest < ActionController::TestCase
     get :show, params: { id: @article.to_param }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'articles/show'
+    assert_template 'articles/show'
   end
 
   test 'should get edit' do
     get :edit, params: { id: @article.to_param }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'articles/edit'
+    assert_template 'articles/edit'
   end
 
   test 'should update article' do

@@ -1,4 +1,3 @@
-<% byebug %>
 <% message = link_to(
   '&#xe008;'.html_safe,
   add_to_order_catalog_path(@document),
@@ -6,4 +5,4 @@
   remote: true, method: :post, class: 'add_link add_to_order iconic'
 ) %>
 <% id = "#document_#{@document.id}_to_order" %>
-$('<%= id %>').html('<%= message %>');
+$('<%= id %>').html('<%= j message %>');

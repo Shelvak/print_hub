@@ -10,7 +10,7 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:payments)
     # # assert_select '#unexpected_error', false
-    # # assert_template 'payments/index'
+    # assert_template 'payments/index'
   end
 
   test 'should get filtered index' do
@@ -28,7 +28,7 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_equal '45.0', assigns(:payments).to_a.sum(&:paid).to_s
     assert_equal '1001.5', assigns(:deposits).to_a.sum(&:amount).to_s
     # # assert_select '#unexpected_error', false
-    # # assert_template 'payments/index'
+    # assert_template 'payments/index'
   end
 
   test 'should get filtered index with 0 amount' do
@@ -44,6 +44,6 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_equal '0.0', assigns(:payments).to_a.sum(&:amount).to_f.to_s
     assert_equal '0.0', assigns(:payments).to_a.sum(&:paid).to_f.to_s
     # # assert_select '#unexpected_error', false
-    # # assert_template 'payments/index'
+    # assert_template 'payments/index'
   end
 end

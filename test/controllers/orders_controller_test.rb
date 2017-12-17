@@ -19,7 +19,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert assigns(:orders).map(&:customer_id).uniq.size > 1
     assert assigns(:orders).any? { |o| !o.print_out }
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/index'
+    assert_template 'orders/index'
   end
 
   test 'should get user for print index' do
@@ -32,7 +32,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:orders)
     assert assigns(:orders).all?(&:print_out)
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/index'
+    assert_template 'orders/index'
   end
 
   test 'should get user filtered index' do
@@ -46,7 +46,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert assigns(:orders).size > 0
     assert assigns(:orders).all? { |o| o.customer.to_s.match /darth/i }
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/index'
+    assert_template 'orders/index'
   end
 
   test 'should get customer index' do
@@ -60,7 +60,7 @@ class OrdersControllerTest < ActionController::TestCase
     # Se listan órdenes solo del cliente
     assert_equal customer.orders.count, assigns(:orders).size
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/index'
+    assert_template 'orders/index'
   end
 
   test 'should get new' do
@@ -69,7 +69,7 @@ class OrdersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/new'
+    assert_template 'orders/new'
   end
 
   test 'should create order' do
@@ -119,7 +119,7 @@ class OrdersControllerTest < ActionController::TestCase
     get :show, params: { type: 'all', id: @order.to_param }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/show'
+    assert_template 'orders/show'
   end
 
   test 'should show customer order' do
@@ -128,7 +128,7 @@ class OrdersControllerTest < ActionController::TestCase
     get :show, params: { id: @order.to_param }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/show'
+    assert_template 'orders/show'
   end
 
   test 'should get edit' do
@@ -137,7 +137,7 @@ class OrdersControllerTest < ActionController::TestCase
     get :edit, params: { id: @order.to_param }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/edit'
+    assert_template 'orders/edit'
   end
 
   test 'should update order' do
@@ -185,7 +185,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'orders/_file_line'
+    assert_template 'orders/_file_line'
   end
 
   test 'should clean catalog order' do

@@ -13,7 +13,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customers)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/index'
+    assert_template 'customers/index'
   end
 
   test 'should get filtered index' do
@@ -26,7 +26,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_equal 2, assigns(:customers).size
     assert assigns(:customers).all? { |c| c.to_s.match /anakin|darth/i }
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/index'
+    assert_template 'customers/index'
   end
 
   test 'should get index with debt customers' do
@@ -38,7 +38,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_equal 2, assigns(:customers).size
     assert_equal Customer.with_debt.to_a.sort, assigns(:customers).to_a.sort
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/index'
+    assert_template 'customers/index'
   end
 
   test 'should get new' do
@@ -48,7 +48,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/new'
+    assert_template 'customers/new'
   end
 
   test 'should get public new' do
@@ -58,7 +58,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/new_public'
+    assert_template 'customers/new_public'
   end
 
  test 'should create simple customer' do
@@ -175,7 +175,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/show'
+    assert_template 'customers/show'
   end
 
   test 'should get edit' do
@@ -185,7 +185,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/edit'
+    assert_template 'customers/edit'
   end
 
   test 'should update customer' do
@@ -255,7 +255,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/credit_detail'
+    assert_template 'customers/credit_detail'
   end
 
   test 'should get edit profile' do
@@ -265,7 +265,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/edit_profile'
+    assert_template 'customers/edit_profile'
   end
 
   test 'should not get alien edit profile' do
@@ -278,7 +278,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:customer)
     assert_equal logged_customer.id, assigns(:customer).id
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/edit_profile'
+    assert_template 'customers/edit_profile'
   end
 
   test 'should update customer profile and avoid create a bonus' do
@@ -330,7 +330,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/_debt'
+    assert_template 'customers/_debt'
   end
 
   test 'should pay off a customer month debt' do
@@ -343,7 +343,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     # assert_select '#unexpected_error', false
-    # assert_template 'customers/_month_paid'
+    assert_template 'customers/_month_paid'
   end
 
   test 'should be able to use customer rfid' do

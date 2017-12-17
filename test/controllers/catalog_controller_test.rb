@@ -15,7 +15,7 @@ class CatalogControllerTest < ActionController::TestCase
     assert_response :success
     assert_nil assigns(:documents) # Index with no search give no documents =)
     # assert_select '#unexpected_error', false
-    # assert_template 'catalog/index'
+    assert_template 'catalog/index'
   end
 
   test 'should get index with tag filter' do
@@ -27,7 +27,7 @@ class CatalogControllerTest < ActionController::TestCase
     assert_equal tag.documents.count, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.tags.include?(tag) }
     # assert_select '#unexpected_error', false
-    # assert_template 'catalog/index'
+    assert_template 'catalog/index'
   end
 
   test 'should get index with search filter' do
@@ -37,14 +37,14 @@ class CatalogControllerTest < ActionController::TestCase
     assert_equal 2, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.name.match(/math/i) }
     # assert_select '#unexpected_error', false
-    # assert_template 'catalog/index'
+    assert_template 'catalog/index'
   end
 
   test 'should show document' do
     get :show, params: { id: @document.to_param }
     assert_response :success
     # assert_select '#unexpected_error', false
-    # assert_template 'catalog/show'
+    assert_template 'catalog/show'
   end
 
   test 'should add document to order' do
@@ -52,35 +52,21 @@ class CatalogControllerTest < ActionController::TestCase
 
     i18n_scope = [:view, :catalog, :remove_from_order]
 
-    post :add_to_order, params: { id: @document.to_param }, xhr: true, format: :js
+    post :add_to_order, params: { id: @document.to_param }, xhr: true, as: :js
     assert_response :success
-    assert_match /#{I18n.t(:title, scope: i18n_scope)}/, @response.body
+    assert_match(/#{I18n.t(:title, scope: i18n_scope)}/, @response.body)
     assert session[:documents_to_order].include?(@document.id)
   end
 
   test 'should remove document from next print' do
     assert session[:documents_to_order].blank?
 
-    $tuhna = true
-    session[:documents_to_order] = [@document.id]
     i18n_scope = [:view, :catalog, :add_to_order]
 
-    p "-------------------------"
-    p "-------------------------"
-    p "-------------------------"
-    p "-------------------------"
-    # set_trace_func proc { |event, file, line, id, binding, classname|
-    #   File.open('manso_trace.log', 'ab') do |f|
-    #     f.write("%8s %s:%-2d %10s %8s\n" % [event, file, line, id, classname])
-    #   end
-    # }
-    delete :remove_from_order, params: { id: @document.id }, xhr: true
-    p "-------------------------"
-    p "-------------------------"
-    p "-------------------------"
-    p "-------------------------"
+    delete :remove_from_order, params: { id: @document.id }, xhr: true, as: :js
+
     assert_response :success
-    assert_match /#{I18n.t(:title, scope: i18n_scope)}/, @response.body
+    assert_match(/#{I18n.t(:title, scope: i18n_scope)}/, @response.body)
     assert !session[:documents_to_order].include?(@document.id)
 
     assert session[:documents_to_order].blank?
@@ -113,7 +99,7 @@ class CatalogControllerTest < ActionController::TestCase
     assert_not_nil assigns(:tags)
     assert_equal tags.count, assigns(:tags).size
     # assert_select '#unexpected_error', false
-    # assert_template 'catalog/tags'
+    assert_template 'catalog/tags'
   end
 
   test 'should get tag childrens' do
@@ -129,7 +115,7 @@ class CatalogControllerTest < ActionController::TestCase
     assert_not_nil assigns(:tags)
     assert_equal tags.count, assigns(:tags).size
     # assert_select '#unexpected_error', false
-    # assert_template 'catalog/tags'
+    assert_template 'catalog/tags'
   end
 
   test 'should get document through tag' do
@@ -141,6 +127,6 @@ class CatalogControllerTest < ActionController::TestCase
     assert_not_nil assigns(:documents)
     assert_equal document_with_tag.count, assigns(:documents).size
     # assert_select '#unexpected_error', false
-    # assert_template 'catalog/index'
+    assert_template 'catalog/index'
   end
 end

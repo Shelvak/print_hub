@@ -17,7 +17,7 @@ class FeedbacksController < ApplicationController
     @feedback = Feedback.negative.find(params[:id])
 
     respond_to do |format|
-      if @feedback.update_attributes(update_feedback_params)
+      if @feedback.update(update_feedback_params)
         format.html { render 'negative_comment' }
       end
     end

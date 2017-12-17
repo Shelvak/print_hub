@@ -1,5 +1,5 @@
 class CatalogController < ApplicationController
-  before_filter :require_customer, :load_documents_to_order, :load_tag, :load_parent
+  before_action :require_customer, :load_documents_to_order, :load_tag, :load_parent
   helper_method :sort_column, :sort_direction
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
@@ -47,16 +47,10 @@ class CatalogController < ApplicationController
 
   # DELETE /catalog/1/remove_from_order
   def remove_from_order
-    byebug
-    p "LA CONCHA DE TU HNA"
     @document = document_scope.find(params[:id])
     session[:documents_to_order] ||= []
 
     session[:documents_to_order].delete(@document.id)
-
-    respond_to do
-      format.js
-    end
   end
 
   # GET /catalog/1/add_to_order_by_code
