@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.1'
+gem 'rails', '~> 5.0'
 
 gem 'pg'
 gem 'authlogic', '~> 3'
@@ -76,4 +76,5 @@ group :test do
   # gem 'test_after_commit'
 
   gem 'parallel_tests'
+  gem 'rails-controller-testing'
 end
