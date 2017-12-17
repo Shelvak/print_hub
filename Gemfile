@@ -56,6 +56,7 @@ gem 'byebug'
 
 group :development do
   gem 'thin'
+  gem 'listen'
   gem 'capistrano'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
@@ -66,7 +67,7 @@ end
 group :test do
   # Integration test
   gem 'capybara', require: false
-  gem 'selenium-webdriver', '2.53.3'
+  gem 'selenium-webdriver', '2.53.4'
   gem 'capybara-screenshot', require: false
   gem 'chromedriver-helper', require: false
   gem 'poltergeist', require: false

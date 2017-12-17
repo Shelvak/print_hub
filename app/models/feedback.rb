@@ -4,11 +4,6 @@ class Feedback < ApplicationModel
   after_commit :notify_customer, :notify_interesteds
 
   belongs_to :customer, optional: true
-
-  # Atributos "solo lectura"
-  attr_readonly :positive, :item
-
-  # Scopes
   scope :positive, -> { where(positive: true) }
   scope :negative, -> { where(positive: false) }
 

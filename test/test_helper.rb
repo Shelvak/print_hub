@@ -1,10 +1,11 @@
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'authlogic/test_case'
-require 'capybara/rails'
 require 'sidekiq/testing'
 require 'database_cleaner'
 # require 'minitest/reporters'
+require 'capybara/rails'
+require 'capybara/minitest'
 require 'capybara-screenshot/minitest'
 require 'capybara/poltergeist'
 
@@ -117,6 +118,7 @@ end
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
+  include Capybara::Minitest::Assertions
   include Capybara::Screenshot::MiniTestPlugin
 
   # Transactional fixtures do not work with Selenium tests, because Capybara
@@ -147,12 +149,6 @@ class ActionDispatch::IntegrationTest
     )
   end
 
-  Capybara.javascript_driver = case
-                                 when _running_remote then :selenium_remote_firefox
-                                 when _running_local  then :selenium
-                                 else                      :poltergeist
-                               end
-
   Capybara.register_driver :poltergeist do |app|
       Capybara::Poltergeist::Driver.new(app, {
         # debug: true,
@@ -161,6 +157,14 @@ class ActionDispatch::IntegrationTest
         window_size: [1600, 1200]
       })
   end
+
+  Capybara.javascript_driver = case
+                                 when _running_remote then :selenium_remote_firefox
+                                 when _running_local  then :selenium
+                                 else                      :poltergeist
+                               end
+
+
   Capybara.current_driver = Capybara.javascript_driver
   Capybara.server_port = '5416' + (ENV['TEST_ENV_NUMBER'] || 9).to_s
   Capybara.default_max_wait_time = 3
