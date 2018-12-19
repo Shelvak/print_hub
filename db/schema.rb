@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180828004548) do
+ActiveRecord::Schema.define(version: 20181218214149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pgcrypto"
 
   create_table "article_lines", id: :serial, force: :cascade do |t|
     t.integer "print_id"
@@ -329,6 +330,7 @@ ActiveRecord::Schema.define(version: 20180828004548) do
     t.datetime "avatar_updated_at"
     t.integer "lines_per_page"
     t.boolean "not_shifted", default: false
+    t.uuid "abaco_id", default: -> { "gen_random_uuid()" }
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end

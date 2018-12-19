@@ -43,7 +43,7 @@ class User < ApplicationModel
 
   def as_json(options = nil)
     default_options = {
-      only: [:id],
+      only: [:id, :abaco_id],
       methods: [:label, :informal, :admin]
     }
 

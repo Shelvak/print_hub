@@ -18,6 +18,6 @@
     <%= f.input :operator_id, as: :hidden,
       input_html: { class: 'autocomplete-id', id: "auto_operator_name_#{id}" } %>
     <%= f.input :user_id, as: :hidden,
-      input_html: { value: f.object.operator_id || current_user.id } %>
+      input_html: { value: f.object.to_account_id || current_user.id } %>
   </td>
 </tr>

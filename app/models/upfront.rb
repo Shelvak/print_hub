@@ -1,25 +1,31 @@
 class Upfront < ActiveRecord::Base
-  KIND = {
-    upfront:  'u',
-    to_favor: 'f',
-    refunded: 'r',
-  }
+  KIND = [
+    :upfront,
+    :to_favor,
+    :refunded
+  ]
 
   establish_connection :"abaco_#{Rails.env}"
-  self.table_name = 'outflows'
+  self.table_name = 'movements'
 
-  attr_accessor :auto_operator_name
-  default_scope { where(kind: KIND[:upfront]) }
+  attr_accessor :auto_operator_name, :operator_id
+  default_scope { where(kind: KIND.find_index(:upfront)) }
 
   belongs_to :user
-  belongs_to :operator, foreign_key: :operator_id, class_name: 'User'
+  belongs_to :operator, foreign_key: :to_account_id, class_name: 'User'
 
+  before_validation :assign_operator_attrs
   before_save :set_abaco_defaults
 
   def initialize(attributes={})
     super(attributes)
 
-    self.kind ||= KIND[:upfront]
+    self.kind ||= KIND.find_index(:upfront)
+  end
+
+  def assign_operator_attrs
+    self.to_account_type = 'Operator'
+    self.to_account_id   = operator_id
   end
 
   def set_abaco_defaults
