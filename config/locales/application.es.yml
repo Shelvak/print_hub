@@ -779,3 +779,17 @@ es:
         destroy: "Borrado"
         update: "Actualización"
       updated_by: "Modificó"
+    print_queues:
+      state: 'Estado'
+      cancel_job: 'Cancelar trabajo'
+      disabled_cancel_job: 'Cancelando'
+      job_cancelled: 'Se cancelo el trabajo'
+      states:
+        pending: 'Pendiente'
+        held: 'Pausado'
+        processing: 'Procesando'
+        stopped: 'Parado'
+        cancelled: 'Cancelado'
+        aborted: 'Abortado'
+        completed: 'Completo'
+        unknown: 'Desconocido'
