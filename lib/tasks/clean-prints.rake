@@ -3,12 +3,12 @@ namespace :tasks do
   task clean_prints: :environment do
     init_logger
     begin
-      jobs = `lpstat -Wnot-completed -o | awk '{print $1}'`
+      `killall -q -9 /usr/bin/gs` # Kill any looped pdf process
 
-      jobs.split("\n").each do |j|
-        id = j.match(/(\d+)$/)[1]
+      CustomCups.incomplete_job_identifiers.split("\n").each do |j|
+        id = j.match(/-(\d+)$/).captures.first
 
-        msg = `cancel #{id}`
+        msg = ::CustomCups.cancel(id)
 
         msg.present? ? @logger.error(msg) : @logger.info("#{id} cancelled")
       end
@@ -19,7 +19,7 @@ namespace :tasks do
 
   private
     def init_logger
-      @logger = TasksLogger
+      @logger = TasksLogger.dup
       @logger.progname = 'Clean_prints'
       @logger
     end
