@@ -44,6 +44,10 @@
         } %>
       <%= f.input :customer_id, as: :hidden, input_html: { class: 'autocomplete-id' } %>
       </div>
+      <div class="span6">
+        <%= f.input :scheduled_at, as: :datetime_picker,
+          input_html: { disabled: @order.persisted? } %>
+      </div>
     </div>
 
     <h3><%= t 'view.orders.order_lines' %></h3>

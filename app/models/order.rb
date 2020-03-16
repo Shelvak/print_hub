@@ -11,6 +11,7 @@ class Order < ApplicationModel
 
   # Callbacks
   before_destroy :avoid_destruction
+  before_create :can_afford_print_out?
   before_save :can_be_modified?
   before_update :notify_order_ready, if: :ready?
 
@@ -57,11 +58,17 @@ class Order < ApplicationModel
       order_lines.build(document_id: document_id)
     end if include_documents.present?
 
-    self.print_out = !!customer.try(:can_afford?, self.price)
 
     order_items.each do |nm|
       nm.price_per_copy = nm.job_price_per_copy
     end if order_items.any?
+  end
+
+  def can_afford_print_out?
+    self.print_out   = !!customer.try(:can_afford?, self.price)
+    self.print_out ||= order_lines.any? do |ol|
+      (ol.document&.tag_ids || []).include?(TAG_WITHOUT_CREDIT)
+    end
   end
 
   def avoid_destruction
@@ -87,7 +94,7 @@ class Order < ApplicationModel
   end
 
   def must_have_one_item
-    if order_items.empty? && file_lines.empty?
+    if order_items.empty?
       errors.add :base, :must_have_one_item
     end
   end

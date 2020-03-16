@@ -27,3 +27,5 @@ credit_threshold: 0.8
 feedback_interesteds:
   - 'mail1@example.com'
   - 'mail2@example.com'
+
+tag_without_credit: ''

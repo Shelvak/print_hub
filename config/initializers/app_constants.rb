@@ -32,3 +32,5 @@ TMP_FILES = Rails.root.join('tmp')
 UUID_REGEX = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/i
 # Decimal column defaults
 DECIMAL_COLUMN_DEFAULTS = { precision: 15, scale: 3 }
+# Ids de etiquetas que se pueden pedir sin crédito
+TAG_WITHOUT_CREDIT = APP_CONFIG['tag_without_credit']&.to_i

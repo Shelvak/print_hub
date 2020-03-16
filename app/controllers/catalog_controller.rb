@@ -99,7 +99,10 @@ class CatalogController < ApplicationController
   end
 
   def document_scope
-    (@tag ? @tag.documents : Document).enabled.publicly_visible
+    # TMP
+    scope = (@tag ? @tag.documents : Document).enabled
+    scope = scope.publicly_visible if @tag.blank? || TAG_WITHOUT_CREDIT != @tag.id
+    scope
   end
 
   def load_parent

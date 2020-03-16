@@ -24,7 +24,7 @@
     <%= f.error_notification %>
     <%= f.error :base, class: 'alert alert-error' %>
 
-    <div class="js-scheduled-at hidden">
+    <div class="js-scheduled-at">
       <%= f.input :scheduled_at, as: :datetime_picker,
         input_html: { disabled: @order.persisted?, class: 'span6' } %>
     </div>

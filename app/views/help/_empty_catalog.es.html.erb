@@ -7,6 +7,23 @@
     <div class="span6">
       <p class="lead">Decinos <strong>que buscás</strong>&hellip;</p>
       <p class="lead">
+        Si querés encargar alguno de los siguientes libros hacé click <%= link_to 'acá', catalog_path(tag_id: TAG_WITHOUT_CREDIT) %>
+        <div class="row-fluid">
+          <div class="span4">
+            <ul>
+              <li>Sears Zemansky</li>
+              <li>Algebra de Boole</li>
+              <li>Matemáticas Discreta y Combinatoria</li>
+            </ul>
+          </div>
+          <div class="span4">
+            <ul>
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </p>
+      <p class="lead">
         O buscalo por <strong>
           <%= link_to t('menu.tags'), catalog_tags_path %>
         </strong>&hellip;
